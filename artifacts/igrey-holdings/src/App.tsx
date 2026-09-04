@@ -26,8 +26,8 @@ const faqs = [
 
 function Logo({ invert = false }: { invert?: boolean }) {
   return (
-    <Link href="/" className={`flex items-center gap-3 ${invert ? 'brightness-0 invert' : ''}`} data-testid="link-brand">
-      <img src={logo} alt="iGrey Holdings" className="h-16 w-16 object-contain" data-testid="img-brand-logo" />
+    <Link href="/" className="flex items-center gap-3" data-testid="link-brand">
+      <img src={logo} alt="iGrey Holdings" className={`h-20 w-20 scale-125 object-contain ${invert ? 'brightness-0 contrast-150 invert drop-shadow-[0_0_1px_rgba(246,241,229,0.95)]' : ''}`} data-testid="img-brand-logo" />
     </Link>
   );
 }
