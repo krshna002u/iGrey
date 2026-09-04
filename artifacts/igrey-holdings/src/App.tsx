@@ -1,5 +1,5 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ChevronDown, ChevronUp, Clock3, Compass, Home, Linkedin, Menu, Plus, Quote, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ChevronDown, ChevronUp, Clock3, Compass, Facebook, Home, Instagram, Linkedin, Menu, Plus, Quote, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -12,9 +12,9 @@ const asset = (name: string) => `${import.meta.env.BASE_URL}assets/${name}`;
 const logo = asset('igrey-logo.png');
 
 const properties = [
-  { id: 'indiranagar', label: 'LEASED', title: 'Sunlit three-bed in Indiranagar', meta: '3 BHK · 2,140 sq ft · ₹1.8L / month', image: 'property-living.jpg', tone: 'text-[#eddca9] bg-[#19382f]' },
+  { id: 'indiranagar', label: 'LEASED', title: 'Sunlit three-bed in Indiranagar', meta: '3 BHK · 2,140 sq ft · Lease terms on request', image: 'property-living.jpg', tone: 'text-[#eddca9] bg-[#19382f]' },
   { id: 'whitefield', label: 'FOR SALE', title: 'A quiet villa in Whitefield', meta: '4 BHK · 3,860 sq ft · ₹4.25 Cr', image: 'property-villa.jpg', tone: 'text-[#19382f] bg-[#e8c979]' },
-  { id: 'koramangala', label: 'NEW LISTING', title: 'Terrace home, Koramangala', meta: '3 BHK · 2,480 sq ft · ₹2.35L / month', image: 'property-terrace.jpg', tone: 'text-[#f6f1e5] bg-[#bd674e]' },
+  { id: 'koramangala', label: 'NEW LISTING', title: 'Terrace home, Koramangala', meta: '3 BHK · 2,480 sq ft · Lease terms on request', image: 'property-terrace.jpg', tone: 'text-[#f6f1e5] bg-[#bd674e]' },
 ];
 
 const faqs = [
@@ -27,8 +27,7 @@ const faqs = [
 function Logo({ invert = false }: { invert?: boolean }) {
   return (
     <Link href="/" className={`flex items-center gap-3 ${invert ? 'brightness-0 invert' : ''}`} data-testid="link-brand">
-      <img src={logo} alt="iGrey Holdings" className="h-12 w-12 object-contain" data-testid="img-brand-logo" />
-      <span className="hidden text-[10px] font-mono-label leading-tight tracking-[.18em] sm:block">IGREY<br />HOLDINGS</span>
+      <img src={logo} alt="iGrey Holdings" className="h-16 w-16 object-contain" data-testid="img-brand-logo" />
     </Link>
   );
 }
@@ -37,7 +36,6 @@ function Header() {
   const [open, setOpen] = useState(false);
   const [location] = useLocation();
   const nav = [
-    ['Our approach', location === '/' ? '#about' : '/#about'],
     ['Services', location === '/' ? '#services' : '/#services'],
     ['Properties', location === '/' ? '#properties' : '/#properties'],
     ['Careers', '/careers'],
@@ -111,8 +109,8 @@ function HomePage() {
       <div className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-between gap-7">
         <p className="max-w-[370px] text-[15px] leading-6 text-[#19382f]">For every threshold crossed, there is a story behind it. We make the next step feel considered.</p>
         <div className="flex flex-wrap gap-x-12 gap-y-5 text-[#19382f]">
-          <div><strong className="font-display text-4xl">08</strong><span className="ml-3 font-mono-label text-[9px]">years in Bangalore</span></div>
-          <div><strong className="font-display text-4xl">1.2k</strong><span className="ml-3 font-mono-label text-[9px]">homes placed</span></div>
+          <div><strong className="font-display text-4xl">01+</strong><span className="ml-3 font-mono-label text-[9px]">years in Bangalore</span></div>
+          <div><strong className="font-display text-4xl">100</strong><span className="ml-3 font-mono-label text-[9px]">homes placed</span></div>
           <div><strong className="font-display text-4xl">4.9</strong><span className="ml-3 font-mono-label text-[9px]">client rating</span></div>
         </div>
       </div>
@@ -142,9 +140,9 @@ function HomePage() {
         <div className="relative max-w-[560px]">
           <div className="absolute -left-8 -top-8 h-28 w-28 rounded-full border border-[#e8c979]/50" />
           <img src={asset('property-courtyard.jpg')} alt="A considered home in Bangalore" className="image-wash aspect-[.88] w-full rounded-[12px_160px_12px_12px] object-cover opacity-85" data-testid="img-about-home" />
-          <div className="absolute -bottom-8 right-7 bg-[#e8c979] px-5 py-4 text-[#19382f]"><span className="block font-display text-3xl">Since 2017</span><span className="font-mono-label text-[9px]">Bangalore, India</span></div>
+          <div className="absolute -bottom-8 right-7 bg-[#e8c979] px-5 py-4 text-[#19382f]"><span className="block font-display text-3xl">Since 2025</span><span className="font-mono-label text-[9px]">Bangalore, India</span></div>
         </div>
-        <div><Eyebrow light>OUR POINT OF VIEW</Eyebrow><h2 className="mt-7 max-w-[580px] font-display text-6xl leading-[.92] lg:text-8xl">Property is personal.</h2><p className="mt-9 max-w-[510px] text-[17px] leading-8 text-[#f6f1e5]/70">A home is not a line item. A lease is not a formality. We built iGrey around the moments where property touches real life—with the patience to listen and the rigour to get things right.</p><p className="mt-5 max-w-[510px] text-[17px] leading-8 text-[#f6f1e5]/70">Our role is simple: make the path legible, then walk it with you.</p><div className="mt-10"><ArrowLink light href="#contact">Meet the team</ArrowLink></div></div>
+        <div><Eyebrow light>OUR POINT OF VIEW</Eyebrow><h2 className="mt-7 max-w-[580px] font-display text-6xl leading-[.92] lg:text-8xl">Property is personal.</h2><p className="mt-9 max-w-[510px] text-[17px] leading-8 text-[#f6f1e5]/70">A home is not a line item. A lease is not a formality. We built iGrey around the moments where property touches real life—with the patience to listen and the rigour to get things right.</p><p className="mt-5 max-w-[510px] text-[17px] leading-8 text-[#f6f1e5]/70">Our role is simple: make the path legible, then walk it with you.</p></div>
       </div>
     </section>
 
@@ -205,7 +203,7 @@ function ContactAndFaq() {
 }
 
 function Footer() {
-  return <footer className="bg-[#19382f] px-5 pb-8 pt-16 text-[#f6f1e5] lg:px-10"><div className="mx-auto max-w-[1320px]"><div className="grid gap-12 border-b border-[#f6f1e5]/15 pb-14 lg:grid-cols-[1.3fr_.7fr_.7fr]"><div><Logo invert /><p className="mt-8 max-w-[280px] text-sm leading-6 text-[#f6f1e5]/55">Property, with perspective.<br />Bangalore and beyond.</p></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">EXPLORE</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="#about" data-testid="link-footer-about">Our approach</a><a href="#services" data-testid="link-footer-services">Services</a><a href="#properties" data-testid="link-footer-properties">Properties</a><Link href="/careers" data-testid="link-footer-careers">Careers</Link></div></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">FIND US</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="mailto:hello@igreyholdings.com" data-testid="link-footer-email">hello@igreyholdings.com</a><span>Indiranagar, Bangalore</span><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" data-testid="link-footer-linkedin"><Linkedin className="h-4 w-4" /></a></div></div></div><div className="flex flex-wrap justify-between gap-4 pt-7 font-mono-label text-[9px] text-[#f6f1e5]/35"><span>© 2025 IGREY HOLDINGS</span><span>A BETTER PERSPECTIVE</span><span>MADE FOR THE LONG VIEW</span></div></div></footer>;
+  return <footer className="bg-[#19382f] px-5 pb-8 pt-16 text-[#f6f1e5] lg:px-10"><div className="mx-auto max-w-[1320px]"><div className="grid gap-12 border-b border-[#f6f1e5]/15 pb-14 lg:grid-cols-[1.3fr_.7fr_.7fr]"><div><Logo invert /><p className="mt-8 max-w-[280px] text-sm leading-6 text-[#f6f1e5]/55">Property, with perspective.<br />Bangalore and beyond.</p></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">EXPLORE</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="#services" data-testid="link-footer-services">Services</a><a href="#properties" data-testid="link-footer-properties">Properties</a><Link href="/careers" data-testid="link-footer-careers">Careers</Link></div></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">FIND US</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="mailto:hello@igreyholdings.com" data-testid="link-footer-email">hello@igreyholdings.com</a><span>Indiranagar, Bangalore</span><div className="flex items-center gap-4 pt-2"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" data-testid="link-footer-linkedin"><Linkedin className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" data-testid="link-footer-instagram"><Instagram className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" data-testid="link-footer-facebook"><Facebook className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a></div></div></div></div><div className="flex flex-wrap items-center justify-between gap-4 pt-7 font-mono-label text-[9px] text-[#f6f1e5]/35"><span>© 2025</span><div className="flex flex-wrap gap-x-6 gap-y-2"><a href="#terms-and-conditions" data-testid="link-footer-terms">Terms &amp; Conditions</a><a href="#privacy-policy" data-testid="link-footer-privacy">Privacy Policy</a><a href="#refund-replacement" data-testid="link-footer-refund">Refund &amp; Replacement</a></div><span>A BETTER PERSPECTIVE</span></div></div></footer>;
 }
 
 function CareersPage() {
