@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type Dispatch, type FormEvent, type ReactNode, type SetStateAction } from 'react';
-import { Check, ClipboardList, ExternalLink, FileText, LayoutGrid, Menu, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
+import { Check, ClipboardList, ExternalLink, FileText, LayoutGrid, LogOut, Menu, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -8,6 +8,7 @@ import NotFound from '@/pages/not-found';
 import { Route, Router as WouterRouter, Switch, useLocation } from 'wouter';
 
 const queryClient = new QueryClient();
+const ADMIN_SESSION_KEY = 'igrey-admin-session';
 
 type Property = {
   id: string;
@@ -86,7 +87,7 @@ function Brand() {
   );
 }
 
-function Sidebar({ tab, setTab, open, close }: { tab: Tab; setTab: (tab: Tab) => void; open: boolean; close: () => void }) {
+function Sidebar({ tab, setTab, open, close, onLogout }: { tab: Tab; setTab: (tab: Tab) => void; open: boolean; close: () => void; onLogout: () => void }) {
   return (
     <>
       {open && <button className="mobile-overlay" onClick={close} aria-label="Close navigation" />}
@@ -107,6 +108,7 @@ function Sidebar({ tab, setTab, open, close }: { tab: Tab; setTab: (tab: Tab) =>
           <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 15, color: '#f0db97', fontFamily: 'var(--app-font-mono)', fontSize: 9, letterSpacing: '.07em', textTransform: 'uppercase' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f0db97' }} /> Ready to edit
           </div>
+          <button className="nav-item" onClick={onLogout} style={{ width: '100%', marginTop: 17, padding: '10px 0', border: 0, borderTop: '1px solid rgba(247,240,223,.12)', borderRadius: 0 }} data-testid="button-admin-logout"><LogOut size={14} /> Sign out</button>
         </div>
       </aside>
     </>
@@ -270,7 +272,33 @@ function DeleteDialog({ state, onCancel, onConfirm }: { state: DeleteState; onCa
   return <div className="modal-scrim" role="presentation"><div className="modal-card" style={{ width: 'min(440px, 100%)' }}><div className="modal-head"><div><div className="eyebrow" style={{ color: 'hsl(var(--destructive))' }}>Remove record</div><h2 className="modal-title">Delete this {state.kind === 'properties' ? 'listing' : 'role'}?</h2></div><button className="icon-button" onClick={onCancel} aria-label="Close delete confirmation"><X size={18} /></button></div><div style={{ padding: '22px 25px 6px', color: 'hsl(var(--muted-foreground))', fontSize: 13, lineHeight: 1.55 }}>You are about to remove <strong style={{ color: 'hsl(var(--primary))' }}>{title || 'this record'}</strong>. This change will be saved to the local content store.</div><div className="form-footer"><button className="button button-quiet" onClick={onCancel}>Keep it</button><button className="button button-danger" onClick={onConfirm}><Trash2 size={14} /> Delete</button></div></div></div>;
 }
 
-function Workspace() {
+function AdminLoginPage({ onLogin }: { onLogin: () => void }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    window.localStorage.setItem(ADMIN_SESSION_KEY, 'active');
+    onLogin();
+  };
+
+  return <main className="auth-shell noise">
+    <section className="auth-card" aria-labelledby="admin-login-title">
+      <Brand />
+      <div className="eyebrow" style={{ marginTop: 48 }}>Private workspace</div>
+      <h1 id="admin-login-title" className="auth-title">Welcome<br /><em>back.</em></h1>
+      <p className="auth-copy">Sign in to manage the property listings and career roles shown across the public site.</p>
+      <form onSubmit={submit} className="auth-form">
+        <Field label="Email address"><input required type="email" autoComplete="email" className="field-input" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@igreyholdings.com" data-testid="input-admin-login-email" /></Field>
+        <Field label="Password"><input required type="password" autoComplete="current-password" className="field-input" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" data-testid="input-admin-login-password" /></Field>
+        <button type="submit" className="button button-primary auth-submit" data-testid="button-admin-login"><LogOut size={14} style={{ transform: 'rotate(180deg)' }} /> Continue to workspace</button>
+      </form>
+      <p className="auth-note">This sign-in keeps access to this browser's private content workspace.</p>
+    </section>
+  </main>;
+}
+
+function Workspace({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<Tab>('properties');
   const [properties, setProperties] = useStoredContent<Property[]>('igrey-properties', defaultProperties);
   const [careers, setCareers] = useStoredContent<CareerOpening[]>('igrey-careers', defaultCareers);
@@ -319,7 +347,7 @@ function Workspace() {
   const add = () => setEditor({ kind: tab });
   return (
     <div className="admin-shell noise">
-      <Sidebar tab={tab} setTab={setTab} open={mobileOpen} close={() => setMobileOpen(false)} />
+      <Sidebar tab={tab} setTab={setTab} open={mobileOpen} close={() => setMobileOpen(false)} onLogout={onLogout} />
       <div className="admin-main">
         <Header tab={tab} onMenu={() => setMobileOpen(true)} />
         <main className="workspace">
@@ -341,8 +369,11 @@ function Workspace() {
 }
 
 function Router() {
-  const [location] = useLocation();
-  return <ErrorBoundary resetKey={location}><Switch><Route path="/" component={Workspace} /><Route component={NotFound} /></Switch></ErrorBoundary>;
+  const [location, navigate] = useLocation();
+  const [authenticated, setAuthenticated] = useState(() => typeof window !== 'undefined' && window.localStorage.getItem(ADMIN_SESSION_KEY) === 'active');
+  const login = () => { setAuthenticated(true); navigate('/'); };
+  const logout = () => { window.localStorage.removeItem(ADMIN_SESSION_KEY); setAuthenticated(false); navigate('/login'); };
+  return <ErrorBoundary resetKey={location}><Switch><Route path="/login">{() => <AdminLoginPage onLogin={login} />}</Route><Route path="/">{() => authenticated ? <Workspace onLogout={logout} /> : <AdminLoginPage onLogin={login} />}</Route><Route component={NotFound} /></Switch></ErrorBoundary>;
 }
 
 function App() {
