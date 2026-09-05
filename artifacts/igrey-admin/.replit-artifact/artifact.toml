@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/igrey-admin/"
+title = "iGrey Admin"
+description = "A private content management workspace for iGrey Holdings staff to manage property listings and career roles shown on the public website."
+version = "1.0.0"
+id = "artifacts/igrey-admin"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/igrey-admin/" ]
+localPort = 18100
+
+[services.development]
+run = "pnpm --filter @workspace/igrey-admin run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/igrey-admin", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/igrey-admin/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18100"
+BASE_PATH = "/igrey-admin/"
