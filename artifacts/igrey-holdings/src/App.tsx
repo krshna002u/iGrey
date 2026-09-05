@@ -10,7 +10,7 @@ import { Link, Route, Router as WouterRouter, Switch, useLocation } from 'wouter
 const queryClient = new QueryClient();
 const asset = (name: string) => `${import.meta.env.BASE_URL}assets/${name}`;
 const logo = asset('igrey-logo.png');
-const footerLogo = asset('iGrey_Horizontal_logo_BG_Removed_1788586316121.png');
+const footerLogo = asset('iGrey_Horizontal_logo_BG_Removed_1788589577922.png');
 
 const defaultProperties = [
   { id: 'indiranagar', label: 'LEASED', title: 'Sunlit three-bed in Indiranagar', meta: '3 BHK · 2,140 sq ft · Lease terms on request', images: ['property-living.jpg', 'property-courtyard.jpg', 'property-terrace.jpg'], tone: 'text-[#eddca9] bg-[#19382f]', details: 'A bright, considered home close to the everyday rhythm of Indiranagar.', features: ['3 bedrooms', '2,140 sq ft', 'Lease terms on request'] },

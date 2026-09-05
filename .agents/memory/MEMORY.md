@@ -1,0 +1,1 @@
+- [Managed artifact ports](managed-artifact-ports.md) — Replit artifact workflows inject PORT and BASE_PATH; standalone Vite builds need the same values explicitly.
