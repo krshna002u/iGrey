@@ -1,5 +1,5 @@
-import { useEffect, useState, type Dispatch, type FormEvent, type ReactNode, type SetStateAction } from 'react';
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, Compass, Facebook, Home, Instagram, Linkedin, Menu, MessageCircle, Pencil, Plus, Quote, Save, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { useEffect, useState, type Dispatch, type FormEvent, type MouseEvent, type ReactNode, type SetStateAction } from 'react';
+import { ArrowDownRight, ArrowRight, ArrowUp, ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, Compass, Facebook, Home, Instagram, Linkedin, Menu, MessageCircle, Pencil, Plus, Quote, Save, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -94,11 +94,18 @@ function useStoredContent<T>(key: string, fallback: T): [T, Dispatch<SetStateAct
   return [value, setValue];
 }
 
+function scrollToHero(event: MouseEvent<HTMLAnchorElement>) {
+  if (window.location.pathname !== '/') return;
+  event.preventDefault();
+  window.history.replaceState(null, '', '#hero');
+  document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function Logo({ invert = false }: { invert?: boolean }) {
   return (
-    <Link href="/#hero" className="flex items-center gap-3" data-testid="link-brand">
+    <a href="/#hero" onClick={scrollToHero} className="flex items-center gap-3" data-testid="link-brand">
       <img src={logo} alt="iGrey Holdings" className={`h-20 w-20 scale-125 object-contain ${invert ? 'brightness-0 contrast-150 invert drop-shadow-[0_0_1px_rgba(246,241,229,0.95)]' : ''}`} data-testid="img-brand-logo" />
-    </Link>
+    </a>
   );
 }
 
@@ -337,7 +344,7 @@ function ContactAndFaq() {
 }
 
 function Footer() {
-  return <footer className="bg-[#19382f] px-5 pb-8 pt-16 text-[#f6f1e5] lg:px-10"><div className="mx-auto max-w-[1320px]"><div className="grid gap-12 border-b border-[#f6f1e5]/15 pb-14 lg:grid-cols-[1.3fr_.7fr_.7fr]"><div><Logo invert /><p className="mt-8 max-w-[280px] text-sm leading-6 text-[#f6f1e5]/55">Property, with perspective.<br />Bangalore and beyond.</p></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">EXPLORE</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><Link href="/#hero" data-testid="link-footer-home">Home</Link><a href="#services" data-testid="link-footer-services">Services</a><Link href="/properties" data-testid="link-footer-properties">Properties</Link><Link href="/careers" data-testid="link-footer-careers">Careers</Link></div></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">FIND US</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="mailto:hello@igreyholdings.com" data-testid="link-footer-email">hello@igreyholdings.com</a><a href="tel:+919876543210" data-testid="link-footer-phone">+91 98765 43210</a><span>Indiranagar, Bangalore</span><div className="flex items-center gap-4 pt-2"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" data-testid="link-footer-linkedin"><Linkedin className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" data-testid="link-footer-instagram"><Instagram className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" data-testid="link-footer-facebook"><Facebook className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a></div></div></div></div><div className="flex flex-wrap items-center justify-between gap-4 pt-7 font-mono-label text-[9px] text-[#f6f1e5]/35"><span>© 2026</span><div className="flex flex-wrap gap-x-6 gap-y-2"><Link href="/terms-and-conditions" data-testid="link-footer-terms">Terms &amp; Conditions</Link><Link href="/privacy-policy" data-testid="link-footer-privacy">Privacy Policy</Link><Link href="/refund-replacement" data-testid="link-footer-refund">Refund &amp; Replacement</Link></div><span>A BETTER PERSPECTIVE</span></div></div></footer>;
+  return <footer className="bg-[#19382f] px-5 pb-8 pt-16 text-[#f6f1e5] lg:px-10"><div className="mx-auto max-w-[1320px]"><div className="grid gap-12 border-b border-[#f6f1e5]/15 pb-14 lg:grid-cols-[1.3fr_.7fr_.7fr]"><div><Logo invert /><p className="mt-8 max-w-[280px] text-sm leading-6 text-[#f6f1e5]/55">Property, with perspective.<br />Bangalore and beyond.</p></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">EXPLORE</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="/#hero" onClick={scrollToHero} data-testid="link-footer-home">Home</a><a href="#services" data-testid="link-footer-services">Services</a><Link href="/properties" data-testid="link-footer-properties">Properties</Link><Link href="/careers" data-testid="link-footer-careers">Careers</Link></div></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">FIND US</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="mailto:hello@igreyholdings.com" data-testid="link-footer-email">hello@igreyholdings.com</a><a href="tel:+919876543210" data-testid="link-footer-phone">+91 98765 43210</a><span>Indiranagar, Bangalore</span><div className="flex items-center gap-4 pt-2"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" data-testid="link-footer-linkedin"><Linkedin className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" data-testid="link-footer-instagram"><Instagram className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" data-testid="link-footer-facebook"><Facebook className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a></div></div></div></div><div className="flex flex-wrap items-center justify-between gap-4 pt-7 font-mono-label text-[9px] text-[#f6f1e5]/35"><span>© 2026</span><div className="flex flex-wrap gap-x-6 gap-y-2"><Link href="/terms-and-conditions" data-testid="link-footer-terms">Terms &amp; Conditions</Link><Link href="/privacy-policy" data-testid="link-footer-privacy">Privacy Policy</Link><Link href="/refund-replacement" data-testid="link-footer-refund">Refund &amp; Replacement</Link></div><a href="/#hero" onClick={scrollToHero} className="group inline-flex items-center gap-2 text-[#f6f1e5]/55 transition-colors hover:text-[#e8c979]" data-testid="link-footer-back-to-top">Back to top <ArrowUp className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5" /></a><span>A BETTER PERSPECTIVE</span></div></div></footer>;
 }
 
 type LegalSection = { heading: string; body: string };
