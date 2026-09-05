@@ -1,5 +1,5 @@
 import { useEffect, useState, type Dispatch, type FormEvent, type ReactNode, type SetStateAction } from 'react';
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, Compass, Facebook, Home, Instagram, Linkedin, Menu, Pencil, Plus, Quote, Save, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, Compass, Facebook, Home, Instagram, Linkedin, Menu, MessageCircle, Pencil, Plus, Quote, Save, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -10,7 +10,7 @@ import { Link, Route, Router as WouterRouter, Switch, useLocation } from 'wouter
 const queryClient = new QueryClient();
 const asset = (name: string) => `${import.meta.env.BASE_URL}assets/${name}`;
 const logo = asset('igrey-logo.png');
-const footerLogo = asset('igrey-footer-logo-2026.png');
+const footerLogo = asset('iGrey_Horizontal_logo_BG_Removed_1788586316121.png');
 
 const defaultProperties = [
   { id: 'indiranagar', label: 'LEASED', title: 'Sunlit three-bed in Indiranagar', meta: '3 BHK · 2,140 sq ft · Lease terms on request', images: ['property-living.jpg', 'property-courtyard.jpg', 'property-terrace.jpg'], tone: 'text-[#eddca9] bg-[#19382f]', details: 'A bright, considered home close to the everyday rhythm of Indiranagar.', features: ['3 bedrooms', '2,140 sq ft', 'Lease terms on request'] },
@@ -107,9 +107,11 @@ function Header() {
   const [open, setOpen] = useState(false);
   const [location] = useLocation();
   const nav = [
+    ['Home', '/'],
     ['Services', location === '/' ? '#services' : '/#services'],
     ['Properties', location === '/' ? '#properties' : '/#properties'],
     ['Careers', '/careers'],
+    ['Admin', '/admin'],
   ];
   const close = () => setOpen(false);
   return (
@@ -120,7 +122,7 @@ function Header() {
           {nav.map(([label, href]) => href.startsWith('#') ? (
             <a key={href} href={href} className="text-[11px] font-mono-label text-[#f6f1e5]/80 transition-colors hover:text-[#e8c979]" data-testid={`link-nav-${label.toLowerCase().replaceAll(' ', '-')}`}>{label}</a>
           ) : (
-            <Link key={href} href={href} className="text-[11px] font-mono-label text-[#f6f1e5]/80 transition-colors hover:text-[#e8c979]" data-testid="link-nav-careers">{label}</Link>
+            <Link key={href} href={href} className="text-[11px] font-mono-label text-[#f6f1e5]/80 transition-colors hover:text-[#e8c979]" data-testid={`link-nav-${label.toLowerCase().replaceAll(' ', '-')}`}>{label}</Link>
           ))}
           <a href="#contact" className="rounded-full border border-[#f6f1e5]/40 px-5 py-3 text-[10px] font-mono-label text-[#f6f1e5] transition-all hover:border-[#e8c979] hover:bg-[#e8c979] hover:text-[#19382f]" data-testid="link-nav-contact">Start a conversation <ArrowRight className="ml-2 inline h-3 w-3" /></a>
         </nav>
@@ -130,7 +132,7 @@ function Header() {
       </div>
       {open && <div className="mx-4 rounded-2xl border border-[#f6f1e5]/15 bg-[#19382f]/95 p-5 shadow-xl md:hidden">
         <div className="flex flex-col gap-5">
-          {nav.map(([label, href]) => href.startsWith('#') ? <a key={href} href={href} onClick={close} className="font-mono-label text-xs text-[#f6f1e5]" data-testid={`link-mobile-${label.toLowerCase().replaceAll(' ', '-')}`}>{label}</a> : <Link key={href} href={href} onClick={close} className="font-mono-label text-xs text-[#f6f1e5]" data-testid="link-mobile-careers">{label}</Link>)}
+          {nav.map(([label, href]) => href.startsWith('#') ? <a key={href} href={href} onClick={close} className="font-mono-label text-xs text-[#f6f1e5]" data-testid={`link-mobile-${label.toLowerCase().replaceAll(' ', '-')}`}>{label}</a> : <Link key={href} href={href} onClick={close} className="font-mono-label text-xs text-[#f6f1e5]" data-testid={`link-mobile-${label.toLowerCase().replaceAll(' ', '-')}`}>{label}</Link>)}
           <a href="#contact" onClick={close} className="font-mono-label text-xs text-[#e8c979]" data-testid="link-mobile-contact">Start a conversation →</a>
         </div>
       </div>}
@@ -337,7 +339,7 @@ function ContactAndFaq() {
 }
 
 function Footer() {
-  return <footer className="bg-[#19382f] px-5 pb-8 pt-16 text-[#f6f1e5] lg:px-10"><div className="mx-auto max-w-[1320px]"><div className="grid gap-12 border-b border-[#f6f1e5]/15 pb-14 lg:grid-cols-[1.3fr_.7fr_.7fr]"><div><div className="w-[360px] max-w-full overflow-hidden rounded-md bg-[#f6f1e5] p-4 shadow-[0_10px_30px_rgba(0,0,0,0.12)] ring-1 ring-[#e8c979]/30"><img src={footerLogo} alt="iGrey Holdings" className="block h-auto w-full object-contain contrast-150" data-testid="img-footer-logo" /></div><p className="mt-8 max-w-[280px] text-sm leading-6 text-[#f6f1e5]/55">Property, with perspective.<br />Bangalore and beyond.</p></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">EXPLORE</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="#services" data-testid="link-footer-services">Services</a><Link href="/properties" data-testid="link-footer-properties">Properties</Link><Link href="/careers" data-testid="link-footer-careers">Careers</Link></div></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">FIND US</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="mailto:hello@igreyholdings.com" data-testid="link-footer-email">hello@igreyholdings.com</a><span>Indiranagar, Bangalore</span><div className="flex items-center gap-4 pt-2"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" data-testid="link-footer-linkedin"><Linkedin className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" data-testid="link-footer-instagram"><Instagram className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" data-testid="link-footer-facebook"><Facebook className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a></div></div></div></div><div className="flex flex-wrap items-center justify-between gap-4 pt-7 font-mono-label text-[9px] text-[#f6f1e5]/35"><span>© 2025</span><div className="flex flex-wrap gap-x-6 gap-y-2"><a href="#terms-and-conditions" data-testid="link-footer-terms">Terms &amp; Conditions</a><a href="#privacy-policy" data-testid="link-footer-privacy">Privacy Policy</a><a href="#refund-replacement" data-testid="link-footer-refund">Refund &amp; Replacement</a></div><span>A BETTER PERSPECTIVE</span></div></div></footer>;
+  return <footer className="bg-[#19382f] px-5 pb-8 pt-16 text-[#f6f1e5] lg:px-10"><div className="mx-auto max-w-[1320px]"><div className="grid gap-12 border-b border-[#f6f1e5]/15 pb-14 lg:grid-cols-[1.3fr_.7fr_.7fr]"><div><div className="w-[360px] max-w-full overflow-hidden rounded-md bg-[#f6f1e5] p-4 shadow-[0_10px_30px_rgba(0,0,0,0.12)] ring-1 ring-[#e8c979]/30"><img src={footerLogo} alt="iGrey Holdings" className="block h-auto w-full object-contain" data-testid="img-footer-logo" /></div><p className="mt-8 max-w-[280px] text-sm leading-6 text-[#f6f1e5]/55">Property, with perspective.<br />Bangalore and beyond.</p></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">EXPLORE</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><Link href="/" data-testid="link-footer-home">Home</Link><a href="#services" data-testid="link-footer-services">Services</a><Link href="/properties" data-testid="link-footer-properties">Properties</Link><Link href="/careers" data-testid="link-footer-careers">Careers</Link><Link href="/admin" data-testid="link-footer-admin">Admin</Link></div></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">FIND US</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="mailto:hello@igreyholdings.com" data-testid="link-footer-email">hello@igreyholdings.com</a><span>Indiranagar, Bangalore</span><div className="flex items-center gap-4 pt-2"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" data-testid="link-footer-linkedin"><Linkedin className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" data-testid="link-footer-instagram"><Instagram className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" data-testid="link-footer-facebook"><Facebook className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a></div></div></div></div><div className="flex flex-wrap items-center justify-between gap-4 pt-7 font-mono-label text-[9px] text-[#f6f1e5]/35"><span>© 2025</span><div className="flex flex-wrap gap-x-6 gap-y-2"><a href="#terms-and-conditions" data-testid="link-footer-terms">Terms &amp; Conditions</a><a href="#privacy-policy" data-testid="link-footer-privacy">Privacy Policy</a><a href="#refund-replacement" data-testid="link-footer-refund">Refund &amp; Replacement</a></div><span>A BETTER PERSPECTIVE</span></div></div></footer>;
 }
 
 function LegacyCareersPage() {
@@ -447,12 +449,17 @@ function AdminPage() {
   </div>;
 }
 
+function WhatsAppButton() {
+  const message = encodeURIComponent("Hi iGrey Holdings, I would like to know more about your properties.");
+  return <a href={`https://wa.me/?text=${message}`} target="_blank" rel="noreferrer" aria-label="Chat with iGrey Holdings on WhatsApp" title="Chat on WhatsApp" className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_28px_rgba(0,0,0,0.22)] transition-transform hover:scale-105 sm:h-auto sm:w-auto sm:gap-2 sm:px-5 sm:py-3" data-testid="link-whatsapp"><MessageCircle className="h-6 w-6" /><span className="hidden font-mono-label text-[10px] sm:inline">Chat on WhatsApp</span></a>;
+}
+
 function Router() {
   return <ErrorBoundary><Switch><Route path="/" component={HomePage} /><Route path="/properties" component={PropertiesPage} /><Route path="/careers" component={CareersPage} /><Route path="/admin" component={AdminPage} /><Route component={NotFound} /></Switch></ErrorBoundary>;
 }
 
 function App() {
-  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><Router /></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><Router /></WouterRouter><WhatsAppButton /><Toaster /></TooltipProvider></QueryClientProvider>;
 }
 
 export default App;
