@@ -1,5 +1,5 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, Compass, Facebook, Home, Instagram, Linkedin, Menu, Quote, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { useEffect, useState, type Dispatch, type FormEvent, type ReactNode, type SetStateAction } from 'react';
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, Compass, Facebook, Home, Instagram, Linkedin, Menu, Pencil, Plus, Quote, Save, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -10,13 +10,14 @@ import { Link, Route, Router as WouterRouter, Switch, useLocation } from 'wouter
 const queryClient = new QueryClient();
 const asset = (name: string) => `${import.meta.env.BASE_URL}assets/${name}`;
 const logo = asset('igrey-logo.png');
-const footerLogo = asset('igrey-footer-logo-horizontal.png');
+const footerLogo = asset('igrey-footer-logo-2026.png');
 
-const properties = [
+const defaultProperties = [
   { id: 'indiranagar', label: 'LEASED', title: 'Sunlit three-bed in Indiranagar', meta: '3 BHK · 2,140 sq ft · Lease terms on request', images: ['property-living.jpg', 'property-courtyard.jpg', 'property-terrace.jpg'], tone: 'text-[#eddca9] bg-[#19382f]', details: 'A bright, considered home close to the everyday rhythm of Indiranagar.', features: ['3 bedrooms', '2,140 sq ft', 'Lease terms on request'] },
   { id: 'whitefield', label: 'FOR SALE', title: 'A quiet villa in Whitefield', meta: '4 BHK · 3,860 sq ft · ₹4.25 Cr', images: ['property-villa.jpg', 'property-courtyard.jpg', 'property-living.jpg'], tone: 'text-[#19382f] bg-[#e8c979]', details: 'A generous family villa with calm outdoor spaces and room to grow.', features: ['4 bedrooms', '3,860 sq ft', '₹4.25 Cr'] },
   { id: 'koramangala', label: 'NEW LISTING', title: 'Terrace home, Koramangala', meta: '3 BHK · 2,480 sq ft · Lease terms on request', images: ['property-terrace.jpg', 'property-living.jpg', 'property-villa.jpg'], tone: 'text-[#f6f1e5] bg-[#bd674e]', details: 'An easy, light-filled terrace home in the middle of Koramangala.', features: ['3 bedrooms', '2,480 sq ft', 'Lease terms on request'] },
 ];
+type Property = typeof defaultProperties[number];
 
 const faqs = [
   ['How does iGrey verify a property?', 'We review ownership documents, match details across records, visit the property, and speak with the people who manage it. You receive the useful facts before you spend time on a viewing.'],
@@ -48,7 +49,8 @@ const tenantSteps = [
   ['05', 'Stay assured', 'Investment assurance begins within three months after the agreement, subject to the agreed terms and conditions.'],
 ];
 
-const careerOpenings = [
+type CareerOpening = [string, string, string];
+const defaultCareerOpenings: CareerOpening[] = [
   ['Relationship Manager', 'Bangalore · Full-time', 'Build trusted relationships with owners, buyers and tenants from first conversation to handover.'],
   ['Business Development Manager', 'Bangalore · Full-time', 'Grow our owner and partner network with a thoughtful, consistent approach.'],
   ['Business Development Executive', 'Bangalore · Full-time', 'Bring energy and curiosity to new conversations across Bangalore.'],
@@ -57,6 +59,41 @@ const careerOpenings = [
   ['Videographer', 'Bangalore · Full-time', 'Make the character of homes and neighbourhoods visible through considered film.'],
   ['Video Editor', 'Bangalore · Full-time', 'Shape property stories into clear, engaging visual experiences.'],
 ];
+
+function useStoredContent<T>(key: string, fallback: T): [T, Dispatch<SetStateAction<T>>] {
+  const [value, setValue] = useState<T>(() => {
+    if (typeof window === 'undefined') return fallback;
+    try {
+      const stored = window.localStorage.getItem(key);
+      return stored ? JSON.parse(stored) as T : fallback;
+    } catch {
+      return fallback;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      // Keep the current in-memory edit if storage is unavailable.
+    }
+  }, [key, value]);
+
+  useEffect(() => {
+    const sync = () => {
+      try {
+        const stored = window.localStorage.getItem(key);
+        if (stored) setValue(JSON.parse(stored) as T);
+      } catch {
+        // Keep the current in-memory value if another tab has invalid data.
+      }
+    };
+    window.addEventListener('storage', sync);
+    return () => window.removeEventListener('storage', sync);
+  }, [key]);
+
+  return [value, setValue];
+}
 
 function Logo({ invert = false }: { invert?: boolean }) {
   return (
@@ -120,6 +157,7 @@ function ProcessColumn({ title, steps }: { title: string; steps: string[][] }) {
 
 function HomePage() {
   const [activeFlow, setActiveFlow] = useState<'owners' | 'tenants'>('owners');
+  const [properties] = useStoredContent<Property[]>('igrey-properties', defaultProperties);
   return <div className="min-h-[100dvh] overflow-hidden bg-[#f6f1e5]">
     <section className="grain relative min-h-[760px] overflow-hidden bg-[#19382f] text-[#f6f1e5]">
       <Header />
@@ -233,7 +271,7 @@ function ArrowUpRightIcon() {
   return <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#19382f]/25 text-[#19382f] transition-all group-hover:border-[#bd674e] group-hover:bg-[#bd674e] group-hover:text-[#f6f1e5]"><ArrowUpRight className="h-4 w-4" /></span>;
 }
 
-function PropertyCarousel({ property }: { property: typeof properties[number] }) {
+function PropertyCarousel({ property }: { property: Property }) {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -254,7 +292,7 @@ function PropertyCarousel({ property }: { property: typeof properties[number] })
   </div>;
 }
 
-function PropertyCard({ property, large = false }: { property: typeof properties[number]; large?: boolean }) {
+function PropertyCard({ property, large = false }: { property: Property; large?: boolean }) {
   return <article className={`group relative overflow-hidden bg-[#19382f] ${large ? 'min-h-[570px]' : 'min-h-[285px]'}`} data-testid={`card-property-${property.id}`}>
     <PropertyCarousel property={property} />
     <div className="absolute inset-0 z-[2] bg-gradient-to-t from-[#19382f]/95 via-[#19382f]/15 to-transparent pointer-events-none" />
@@ -262,13 +300,14 @@ function PropertyCard({ property, large = false }: { property: typeof properties
   </article>;
 }
 
-function PropertyGallery({ property }: { property: typeof properties[number] }) {
+function PropertyGallery({ property }: { property: Property }) {
   return <div className="grid grid-cols-2 gap-3 sm:grid-cols-3" data-testid={`gallery-property-${property.id}`}>
     {property.images.map((image, index) => <img key={image} src={asset(image)} alt={`${property.title}, gallery image ${index + 1}`} className={`h-48 w-full object-cover sm:h-64 ${index === 0 ? 'col-span-2 sm:col-span-2' : ''}`} />)}
   </div>;
 }
 
 function PropertiesPage() {
+  const [properties] = useStoredContent<Property[]>('igrey-properties', defaultProperties);
   return <div className="min-h-[100dvh] bg-[#f6f1e5] text-[#19382f]">
     <section className="bg-[#19382f] text-[#f6f1e5]">
       <Header />
@@ -312,6 +351,7 @@ function LegacyCareersPage() {
 
 function CareersPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [careerOpenings] = useStoredContent<CareerOpening[]>('igrey-careers', defaultCareerOpenings);
   const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setSubmitted(true); };
 
   return <div className="min-h-[100dvh] bg-[#f6f1e5] text-[#19382f]">
@@ -325,8 +365,90 @@ function CareersPage() {
   </div>;
 }
 
+const adminInputClass = 'w-full border-b border-[#19382f]/20 bg-transparent px-0 py-3 text-sm text-[#19382f] outline-none transition-colors placeholder:text-[#19382f]/35 focus:border-[#bd674e]';
+const adminLabelClass = 'font-mono-label text-[9px] tracking-[.15em] text-[#19382f]/55';
+
+function emptyProperty(): Property {
+  return { id: '', label: 'NEW LISTING', title: '', meta: '', images: [], tone: 'text-[#f6f1e5] bg-[#bd674e]', details: '', features: [] };
+}
+
+function makePropertyId(title: string, existingIds: string[]) {
+  const base = title.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'property';
+  if (!existingIds.includes(base)) return base;
+  let suffix = 2;
+  while (existingIds.includes(`${base}-${suffix}`)) suffix += 1;
+  return `${base}-${suffix}`;
+}
+
+function AdminPage() {
+  const [properties, setProperties] = useStoredContent<Property[]>('igrey-properties', defaultProperties);
+  const [careerOpenings, setCareerOpenings] = useStoredContent<CareerOpening[]>('igrey-careers', defaultCareerOpenings);
+  const [section, setSection] = useState<'properties' | 'careers'>('properties');
+  const [propertyForm, setPropertyForm] = useState<Property>(emptyProperty);
+  const [editingPropertyId, setEditingPropertyId] = useState<string | null>(null);
+  const [careerForm, setCareerForm] = useState({ role: '', meta: 'Bangalore · Full-time', copy: '' });
+  const [editingCareerIndex, setEditingCareerIndex] = useState<number | null>(null);
+  const [savedMessage, setSavedMessage] = useState('');
+
+  const startNewProperty = () => {
+    setEditingPropertyId(null);
+    setPropertyForm(emptyProperty());
+    setSavedMessage('');
+  };
+
+  const editProperty = (property: Property) => {
+    setEditingPropertyId(property.id);
+    setPropertyForm({ ...property, images: [...property.images], features: [...property.features] });
+    setSavedMessage('');
+  };
+
+  const saveProperty = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const nextProperty = { ...propertyForm, id: editingPropertyId ?? makePropertyId(propertyForm.title, properties.map((item) => item.id)) };
+    setProperties((current) => editingPropertyId ? current.map((item) => item.id === editingPropertyId ? nextProperty : item) : [...current, nextProperty]);
+    setEditingPropertyId(nextProperty.id);
+    setPropertyForm(nextProperty);
+    setSavedMessage('Property saved');
+  };
+
+  const editCareer = (index: number) => {
+    const [role, meta, copy] = careerOpenings[index];
+    setEditingCareerIndex(index);
+    setCareerForm({ role, meta, copy });
+    setSavedMessage('');
+  };
+
+  const startNewCareer = () => {
+    setEditingCareerIndex(null);
+    setCareerForm({ role: '', meta: 'Bangalore · Full-time', copy: '' });
+    setSavedMessage('');
+  };
+
+  const saveCareer = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const nextCareer: CareerOpening = [careerForm.role.trim(), careerForm.meta.trim(), careerForm.copy.trim()];
+    setCareerOpenings((current) => editingCareerIndex === null ? [...current, nextCareer] : current.map((item, index) => index === editingCareerIndex ? nextCareer : item));
+    setSavedMessage('Career role saved');
+  };
+
+  return <div className="min-h-[100dvh] bg-[#f6f1e5] text-[#19382f]">
+    <div className="bg-[#19382f] text-[#f6f1e5]"><Header /><div className="mx-auto max-w-[1320px] px-5 pb-20 pt-40 lg:px-10"><Eyebrow light>PRIVATE WORKSPACE</Eyebrow><div className="mt-7 flex flex-wrap items-end justify-between gap-8"><div><h1 className="font-display text-6xl leading-[.88] lg:text-8xl">Manage the<br /><em className="text-[#e8c979]">details.</em></h1><p className="mt-8 max-w-[490px] text-sm leading-6 text-[#f6f1e5]/65">Add and edit the property listings and career roles shown across the public site.</p></div><span className="font-mono-label text-[9px] text-[#e8c979]">ADMIN / CONTENT</span></div></div></div>
+    <main className="mx-auto max-w-[1320px] px-5 py-12 lg:px-10 lg:py-20">
+      <div className="mb-12 flex flex-wrap items-center justify-between gap-5 border-b border-[#d9d1c0] pb-5"><div className="flex gap-2" role="tablist" aria-label="Admin content type"><button type="button" role="tab" aria-selected={section === 'properties'} onClick={() => setSection('properties')} className={`px-4 py-3 font-mono-label text-[10px] ${section === 'properties' ? 'bg-[#19382f] text-[#f6f1e5]' : 'border border-[#19382f]/20 text-[#19382f]/65'}`} data-testid="tab-admin-properties">Properties</button><button type="button" role="tab" aria-selected={section === 'careers'} onClick={() => setSection('careers')} className={`px-4 py-3 font-mono-label text-[10px] ${section === 'careers' ? 'bg-[#19382f] text-[#f6f1e5]' : 'border border-[#19382f]/20 text-[#19382f]/65'}`} data-testid="tab-admin-careers">Careers</button></div><span className="text-sm text-[#19382f]/55">{savedMessage}</span></div>
+      {section === 'properties' ? <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
+        <div><div className="flex items-center justify-between gap-4"><div><Eyebrow>LISTINGS</Eyebrow><p className="mt-2 text-sm text-[#19382f]/55">{properties.length} properties</p></div><button type="button" onClick={startNewProperty} className="inline-flex items-center gap-2 border border-[#19382f]/25 px-4 py-3 font-mono-label text-[10px] hover:border-[#bd674e] hover:text-[#bd674e]" data-testid="button-add-property"><Plus className="h-3.5 w-3.5" /> Add property</button></div><div className="mt-8 divide-y divide-[#d9d1c0] border-y border-[#d9d1c0]">{properties.map((property) => <div key={property.id} className={`flex items-center justify-between gap-4 py-5 ${editingPropertyId === property.id ? 'bg-[#e8c979]/20' : ''}`}><div className="min-w-0"><p className="font-mono-label text-[9px] text-[#bd674e]">{property.label}</p><h2 className="mt-2 truncate font-display text-2xl">{property.title || 'Untitled property'}</h2><p className="mt-1 truncate text-xs text-[#19382f]/55">{property.meta}</p></div><button type="button" onClick={() => editProperty(property)} className="inline-flex shrink-0 items-center gap-2 border-b border-[#19382f]/30 pb-1 font-mono-label text-[9px] hover:border-[#bd674e] hover:text-[#bd674e]" data-testid={`button-edit-property-${property.id}`}><Pencil className="h-3 w-3" /> Edit</button></div>)}</div></div>
+        <form onSubmit={saveProperty} className="border-t border-[#d9d1c0] pt-5" data-testid="form-admin-property"><div className="flex items-start justify-between gap-5"><div><Eyebrow>{editingPropertyId ? 'EDIT PROPERTY' : 'NEW PROPERTY'}</Eyebrow><h2 className="mt-4 font-display text-4xl">{editingPropertyId ? propertyForm.title || 'Untitled property' : 'Add a listing'}</h2></div>{editingPropertyId && <button type="button" onClick={startNewProperty} className="font-mono-label text-[9px] text-[#19382f]/60 hover:text-[#bd674e]" data-testid="button-new-property">+ New property</button>}</div><div className="mt-9 grid gap-7"><label className="grid gap-2"><span className={adminLabelClass}>PROPERTY TITLE</span><input required value={propertyForm.title} onChange={(event) => setPropertyForm((current) => ({ ...current, title: event.target.value }))} className={adminInputClass} placeholder="Sunlit three-bed in Indiranagar" data-testid="input-admin-property-title" /></label><div className="grid gap-7 md:grid-cols-2"><label className="grid gap-2"><span className={adminLabelClass}>STATUS LABEL</span><input required value={propertyForm.label} onChange={(event) => setPropertyForm((current) => ({ ...current, label: event.target.value }))} className={adminInputClass} placeholder="NEW LISTING" data-testid="input-admin-property-label" /></label><label className="grid gap-2"><span className={adminLabelClass}>META / PRICE</span><input required value={propertyForm.meta} onChange={(event) => setPropertyForm((current) => ({ ...current, meta: event.target.value }))} className={adminInputClass} placeholder="3 BHK · 2,140 sq ft · Lease terms on request" data-testid="input-admin-property-meta" /></label></div><label className="grid gap-2"><span className={adminLabelClass}>DESCRIPTION</span><textarea required rows={3} value={propertyForm.details} onChange={(event) => setPropertyForm((current) => ({ ...current, details: event.target.value }))} className={`${adminInputClass} resize-none`} placeholder="A considered home close to the everyday rhythm of Bangalore." data-testid="textarea-admin-property-details" /></label><label className="grid gap-2"><span className={adminLabelClass}>IMAGE FILENAMES</span><input value={propertyForm.images.join(', ')} onChange={(event) => setPropertyForm((current) => ({ ...current, images: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) }))} className={adminInputClass} placeholder="property-living.jpg, property-villa.jpg" data-testid="input-admin-property-images" /><span className="text-xs text-[#19382f]/45">Use files already in public/assets, separated by commas.</span></label><label className="grid gap-2"><span className={adminLabelClass}>FEATURES</span><input required value={propertyForm.features.join(', ')} onChange={(event) => setPropertyForm((current) => ({ ...current, features: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) }))} className={adminInputClass} placeholder="3 bedrooms, 2,140 sq ft, Lease terms on request" data-testid="input-admin-property-features" /></label><label className="grid gap-2"><span className={adminLabelClass}>COLOUR TREATMENT</span><select value={propertyForm.tone} onChange={(event) => setPropertyForm((current) => ({ ...current, tone: event.target.value }))} className={adminInputClass} data-testid="select-admin-property-tone"><option value="text-[#eddca9] bg-[#19382f]">Green / cream</option><option value="text-[#19382f] bg-[#e8c979]">Gold / green</option><option value="text-[#f6f1e5] bg-[#bd674e]">Terracotta / cream</option></select></label><button type="submit" className="inline-flex w-fit items-center gap-3 bg-[#19382f] px-5 py-4 font-mono-label text-[10px] text-[#f6f1e5] hover:bg-[#bd674e]" data-testid="button-save-property"><Save className="h-4 w-4" /> Save property</button></div></form>
+      </div> : <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
+        <div><div className="flex items-center justify-between gap-4"><div><Eyebrow>OPEN ROLES</Eyebrow><p className="mt-2 text-sm text-[#19382f]/55">{careerOpenings.length} roles</p></div><button type="button" onClick={startNewCareer} className="inline-flex items-center gap-2 border border-[#19382f]/25 px-4 py-3 font-mono-label text-[10px] hover:border-[#bd674e] hover:text-[#bd674e]" data-testid="button-add-career"><Plus className="h-3.5 w-3.5" /> Add role</button></div><div className="mt-8 divide-y divide-[#d9d1c0] border-y border-[#d9d1c0]">{careerOpenings.map(([role, meta, copy], index) => <div key={`${role}-${index}`} className={`flex items-center justify-between gap-4 py-5 ${editingCareerIndex === index ? 'bg-[#e8c979]/20' : ''}`}><div className="min-w-0"><h2 className="truncate font-display text-2xl">{role || 'Untitled role'}</h2><p className="mt-1 truncate text-xs text-[#19382f]/55">{meta}</p></div><button type="button" onClick={() => editCareer(index)} className="inline-flex shrink-0 items-center gap-2 border-b border-[#19382f]/30 pb-1 font-mono-label text-[9px] hover:border-[#bd674e] hover:text-[#bd674e]" data-testid={`button-edit-career-${index}`}><Pencil className="h-3 w-3" /> Edit</button></div>)}</div></div>
+        <form onSubmit={saveCareer} className="border-t border-[#d9d1c0] pt-5" data-testid="form-admin-career"><div className="flex items-start justify-between gap-5"><div><Eyebrow>{editingCareerIndex === null ? 'NEW ROLE' : 'EDIT ROLE'}</Eyebrow><h2 className="mt-4 font-display text-4xl">{careerForm.role || 'Add a role'}</h2></div>{editingCareerIndex !== null && <button type="button" onClick={startNewCareer} className="font-mono-label text-[9px] text-[#19382f]/60 hover:text-[#bd674e]" data-testid="button-new-career">+ New role</button>}</div><div className="mt-9 grid gap-7"><label className="grid gap-2"><span className={adminLabelClass}>ROLE TITLE</span><input required value={careerForm.role} onChange={(event) => setCareerForm((current) => ({ ...current, role: event.target.value }))} className={adminInputClass} placeholder="Relationship Manager" data-testid="input-admin-career-role" /></label><label className="grid gap-2"><span className={adminLabelClass}>LOCATION / TYPE</span><input required value={careerForm.meta} onChange={(event) => setCareerForm((current) => ({ ...current, meta: event.target.value }))} className={adminInputClass} placeholder="Bangalore · Full-time" data-testid="input-admin-career-meta" /></label><label className="grid gap-2"><span className={adminLabelClass}>ROLE DESCRIPTION</span><textarea required rows={5} value={careerForm.copy} onChange={(event) => setCareerForm((current) => ({ ...current, copy: event.target.value }))} className={`${adminInputClass} resize-none`} placeholder="Describe the kind of work this person will own." data-testid="textarea-admin-career-copy" /></label><button type="submit" className="inline-flex w-fit items-center gap-3 bg-[#19382f] px-5 py-4 font-mono-label text-[10px] text-[#f6f1e5] hover:bg-[#bd674e]" data-testid="button-save-career"><Save className="h-4 w-4" /> Save role</button></div></form>
+      </div>}
+    </main>
+    <Footer />
+  </div>;
+}
+
 function Router() {
-  return <ErrorBoundary><Switch><Route path="/" component={HomePage} /><Route path="/properties" component={PropertiesPage} /><Route path="/careers" component={CareersPage} /><Route component={NotFound} /></Switch></ErrorBoundary>;
+  return <ErrorBoundary><Switch><Route path="/" component={HomePage} /><Route path="/properties" component={PropertiesPage} /><Route path="/careers" component={CareersPage} /><Route path="/admin" component={AdminPage} /><Route component={NotFound} /></Switch></ErrorBoundary>;
 }
 
 function App() {
