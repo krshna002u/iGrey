@@ -25,6 +25,29 @@ const faqs = [
   ['Can iGrey help with a property I already own?', 'Yes. Our advisory and property care teams can step in at any stage—from a first rental assessment to ongoing tenant coordination and renewal support.'],
 ];
 
+const clientTypes = [
+  ['01', 'Property owners', 'Rent out with confidence.', 'We connect owners with verified tenants with good backgrounds, support on-time rent and provide long-term property maintenance until the contract ends. Structured paperwork, with zero service charges.'],
+  ['02', 'Property buyers', 'Purchase with perspective.', 'For people looking to purchase a new property, we bring local insight, clear comparisons and steady guidance from the first shortlist through to the next set of keys.'],
+  ['03', 'Tenants', 'Find the right fit.', 'Choose from properties that match your budget, preferred surroundings and requirements. We help you move through verification, agreement and possession with clarity, subject to the agreed terms and conditions.'],
+];
+
+const ownerSteps = [
+  ['01', 'Visit and understand', 'We visit the property and collect the details.'],
+  ['02', 'Share the opportunity', 'We show the property details to interested tenants from our client network.'],
+  ['03', 'Arrange the viewing', 'We coordinate a property visit at a time that works for everyone.'],
+  ['04', 'Share client details', 'We send the relevant client details to the property owner.'],
+  ['05', 'Agree the terms', 'The agreement starts with the terms both sides have approved.'],
+  ['06', 'Begin property care', 'We start PMS right after iGrey takes over, with flexible agreement terms.'],
+];
+
+const tenantSteps = [
+  ['01', 'Start with your brief', 'We show properties that match your requirements and budget.'],
+  ['02', 'Complete verification', 'Once you find a property you like, we collect the relevant documents for verification.'],
+  ['03', 'Agree the terms', 'The agreement starts with flexible terms agreed by both sides.'],
+  ['04', 'Take possession', 'We coordinate the handover so you can start living in your new space.'],
+  ['05', 'Stay assured', 'Investment assurance begins within three months after the agreement, subject to the agreed terms and conditions.'],
+];
+
 function Logo({ invert = false }: { invert?: boolean }) {
   return (
     <Link href="/" className="flex items-center gap-3" data-testid="link-brand">
@@ -78,6 +101,13 @@ function ArrowLink({ children, href = '#contact', light = false }: { children: R
   </a>;
 }
 
+function ProcessColumn({ title, steps }: { title: string; steps: string[][] }) {
+  return <div className="border-t border-[#19382f]/25 pt-6" data-testid={`process-${title.toLowerCase().replaceAll(' ', '-')}`}>
+    <div className="flex items-start justify-between gap-5"><h3 className="font-display text-4xl text-[#19382f]">{title}</h3><span className="font-mono-label text-[9px] text-[#bd674e]">STEP BY STEP</span></div>
+    <div className="mt-8">{steps.map(([number, label, copy]) => <div key={number} className="grid grid-cols-[38px_1fr] gap-4 border-t border-[#19382f]/15 py-5"><span className="font-mono-label text-[10px] text-[#bd674e]">{number}</span><div><h4 className="font-display text-2xl leading-none text-[#19382f]">{label}</h4><p className="mt-2 max-w-[360px] text-sm leading-6 text-[#19382f]/60">{copy}</p></div></div>)}</div>
+  </div>;
+}
+
 function HomePage() {
   return <div className="min-h-[100dvh] overflow-hidden bg-[#f6f1e5]">
     <section className="grain relative min-h-[760px] overflow-hidden bg-[#19382f] text-[#f6f1e5]">
@@ -87,7 +117,7 @@ function HomePage() {
           <div className="reveal"><Eyebrow light>PROPERTY, WITH PERSPECTIVE</Eyebrow></div>
           <h1 className="reveal delay-1 mt-8 max-w-[680px] font-display text-[clamp(4rem,9vw,8.4rem)] leading-[.82] tracking-[-.045em] text-[#f6f1e5]">A better<br /><em className="text-[#e8c979]">perspective.</em></h1>
           <p className="reveal delay-2 mt-9 max-w-[410px] text-[15px] leading-7 text-[#f6f1e5]/70">A clearer way to rent, lease and buy in Bangalore. Human guidance, verified homes, and no fog around the fine print.</p>
-          <div className="reveal delay-3 mt-10 flex flex-wrap items-center gap-6"><ArrowLink href="#properties" light>Explore properties</ArrowLink><a href="#about" className="text-[11px] font-mono-label text-[#f6f1e5]/60 transition-colors hover:text-[#f6f1e5]" data-testid="link-hero-approach">How we work <ArrowDownRight className="ml-2 inline h-3.5 w-3.5" /></a></div>
+          <div className="reveal delay-3 mt-10 flex flex-wrap items-center gap-6"><ArrowLink href="#properties" light>Explore properties</ArrowLink><a href="#how-it-works" className="text-[11px] font-mono-label text-[#f6f1e5]/60 transition-colors hover:text-[#f6f1e5]" data-testid="link-hero-how-it-works">How it works <ArrowDownRight className="ml-2 inline h-3.5 w-3.5" /></a></div>
         </div>
         <div className="relative z-10 ml-auto w-full max-w-[560px] self-center lg:mt-20">
           <div className="reveal delay-2 relative aspect-[.88] overflow-hidden rounded-[180px_180px_14px_14px] border border-[#e8c979]/20 bg-[#31594a]">
@@ -132,6 +162,20 @@ function HomePage() {
               <h3 className="mt-9 font-display text-4xl text-[#19382f]">{title}</h3><p className="mt-4 max-w-[260px] text-sm leading-6 text-[#19382f]/60">{body}</p>
             </div>)}
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" className="bg-[#e9e1cf] px-5 py-24 lg:px-10 lg:py-36">
+      <div className="mx-auto max-w-[1320px]">
+        <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
+          <div><Eyebrow>HOW IT WORKS</Eyebrow><h2 className="mt-7 max-w-[450px] font-display text-6xl leading-[.9] text-[#19382f] lg:text-8xl">One clear process.<br /><em>Three ways in.</em></h2><p className="mt-8 max-w-[330px] text-sm leading-6 text-[#19382f]/65">Whether you own a property, want to buy one or are looking for a place to rent, we make the next step easier to understand.</p></div>
+          <div className="grid gap-x-10 gap-y-0 md:grid-cols-3">
+            {clientTypes.map(([number, title, heading, copy]) => <article key={number} className="border-t border-[#19382f]/25 py-6" data-testid={`card-client-type-${number}`}><div className="flex items-start justify-between gap-4"><span className="font-mono-label text-[10px] text-[#bd674e]">{number}</span><ArrowUpRightIcon /></div><p className="mt-9 font-mono-label text-[9px] tracking-[.14em] text-[#bd674e]">{title}</p><h3 className="mt-3 font-display text-3xl leading-none text-[#19382f]">{heading}</h3><p className="mt-4 text-sm leading-6 text-[#19382f]/60">{copy}</p></article>)}
+          </div>
+        </div>
+        <div className="mt-24 border-t border-[#19382f]/25 pt-8">
+          <div className="grid gap-8 lg:grid-cols-[.8fr_1.2fr]"><div><Eyebrow>FROM FIRST STEP TO HANDOVER</Eyebrow><h3 className="mt-6 max-w-[390px] font-display text-5xl leading-[.92] text-[#19382f] lg:text-6xl">Thoughtful at every step.</h3><p className="mt-6 max-w-[330px] text-sm leading-6 text-[#19382f]/60">We keep the paperwork structured, the communication clear and the care active until the agreement ends.</p></div><div className="grid gap-12 md:grid-cols-2"><ProcessColumn title="For owners" steps={ownerSteps} /><ProcessColumn title="For tenants" steps={tenantSteps} /></div></div>
         </div>
       </div>
     </section>
@@ -204,7 +248,7 @@ function ContactAndFaq() {
 }
 
 function Footer() {
-  return <footer className="bg-[#19382f] px-5 pb-8 pt-16 text-[#f6f1e5] lg:px-10"><div className="mx-auto max-w-[1320px]"><div className="grid gap-12 border-b border-[#f6f1e5]/15 pb-14 lg:grid-cols-[1.3fr_.7fr_.7fr]"><div><div className="w-[280px] max-w-full overflow-hidden rounded-md bg-[#f6f1e5] p-2"><img src={footerLogo} alt="iGrey Holdings" className="block h-auto w-full object-contain" data-testid="img-footer-logo" /></div><p className="mt-8 max-w-[280px] text-sm leading-6 text-[#f6f1e5]/55">Property, with perspective.<br />Bangalore and beyond.</p></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">EXPLORE</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="#services" data-testid="link-footer-services">Services</a><a href="#properties" data-testid="link-footer-properties">Properties</a><Link href="/careers" data-testid="link-footer-careers">Careers</Link></div></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">FIND US</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="mailto:hello@igreyholdings.com" data-testid="link-footer-email">hello@igreyholdings.com</a><span>Indiranagar, Bangalore</span><div className="flex items-center gap-4 pt-2"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" data-testid="link-footer-linkedin"><Linkedin className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" data-testid="link-footer-instagram"><Instagram className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" data-testid="link-footer-facebook"><Facebook className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a></div></div></div></div><div className="flex flex-wrap items-center justify-between gap-4 pt-7 font-mono-label text-[9px] text-[#f6f1e5]/35"><span>© 2025</span><div className="flex flex-wrap gap-x-6 gap-y-2"><a href="#terms-and-conditions" data-testid="link-footer-terms">Terms &amp; Conditions</a><a href="#privacy-policy" data-testid="link-footer-privacy">Privacy Policy</a><a href="#refund-replacement" data-testid="link-footer-refund">Refund &amp; Replacement</a></div><span>A BETTER PERSPECTIVE</span></div></div></footer>;
+  return <footer className="bg-[#19382f] px-5 pb-8 pt-16 text-[#f6f1e5] lg:px-10"><div className="mx-auto max-w-[1320px]"><div className="grid gap-12 border-b border-[#f6f1e5]/15 pb-14 lg:grid-cols-[1.3fr_.7fr_.7fr]"><div><div className="w-[360px] max-w-full overflow-hidden rounded-md bg-[#f6f1e5] p-4 shadow-[0_10px_30px_rgba(0,0,0,0.12)] ring-1 ring-[#e8c979]/30"><img src={footerLogo} alt="iGrey Holdings" className="block h-auto w-full object-contain contrast-150" data-testid="img-footer-logo" /></div><p className="mt-8 max-w-[280px] text-sm leading-6 text-[#f6f1e5]/55">Property, with perspective.<br />Bangalore and beyond.</p></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">EXPLORE</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="#services" data-testid="link-footer-services">Services</a><a href="#properties" data-testid="link-footer-properties">Properties</a><Link href="/careers" data-testid="link-footer-careers">Careers</Link></div></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">FIND US</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="mailto:hello@igreyholdings.com" data-testid="link-footer-email">hello@igreyholdings.com</a><span>Indiranagar, Bangalore</span><div className="flex items-center gap-4 pt-2"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" data-testid="link-footer-linkedin"><Linkedin className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" data-testid="link-footer-instagram"><Instagram className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" data-testid="link-footer-facebook"><Facebook className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a></div></div></div></div><div className="flex flex-wrap items-center justify-between gap-4 pt-7 font-mono-label text-[9px] text-[#f6f1e5]/35"><span>© 2025</span><div className="flex flex-wrap gap-x-6 gap-y-2"><a href="#terms-and-conditions" data-testid="link-footer-terms">Terms &amp; Conditions</a><a href="#privacy-policy" data-testid="link-footer-privacy">Privacy Policy</a><a href="#refund-replacement" data-testid="link-footer-refund">Refund &amp; Replacement</a></div><span>A BETTER PERSPECTIVE</span></div></div></footer>;
 }
 
 function CareersPage() {
