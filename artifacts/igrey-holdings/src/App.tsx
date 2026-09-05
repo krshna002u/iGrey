@@ -108,7 +108,7 @@ function Header() {
   const nav = [
     ['Home', '/'],
     ['Services', location === '/' ? '#services' : '/#services'],
-    ['Properties', location === '/' ? '#properties' : '/#properties'],
+    ['Properties', '/properties'],
     ['Careers', '/careers'],
   ];
   const close = () => setOpen(false);
@@ -166,7 +166,7 @@ function HomePage() {
           <div className="reveal"><Eyebrow light>PROPERTY, WITH PERSPECTIVE</Eyebrow></div>
           <h1 className="reveal delay-1 mt-8 max-w-[680px] font-display text-[clamp(4rem,9vw,8.4rem)] leading-[.82] tracking-[-.045em] text-[#f6f1e5]">A better<br /><em className="text-[#e8c979]">perspective.</em></h1>
           <p className="reveal delay-2 mt-9 max-w-[410px] text-[15px] leading-7 text-[#f6f1e5]/70">A clearer way to rent, lease and buy in Bangalore. Human guidance, verified homes, and no fog around the fine print.</p>
-          <div className="reveal delay-3 mt-10 flex flex-wrap items-center gap-6"><ArrowLink href="#properties" light>Explore properties</ArrowLink><a href="#how-it-works" className="text-[11px] font-mono-label text-[#f6f1e5]/60 transition-colors hover:text-[#f6f1e5]" data-testid="link-hero-how-it-works">How it works <ArrowDownRight className="ml-2 inline h-3.5 w-3.5" /></a></div>
+          <div className="reveal delay-3 mt-10 flex flex-wrap items-center gap-6"><a href="#how-it-works" className="text-[11px] font-mono-label text-[#f6f1e5]/60 transition-colors hover:text-[#f6f1e5]" data-testid="link-hero-how-it-works">How it works <ArrowDownRight className="ml-2 inline h-3.5 w-3.5" /></a></div>
         </div>
         <div className="relative z-10 ml-auto w-full max-w-[560px] self-center lg:mt-20">
           <div className="reveal delay-2 relative aspect-[.88] overflow-hidden rounded-[180px_180px_14px_14px] border border-[#e8c979]/20 bg-[#31594a]">
@@ -337,7 +337,44 @@ function ContactAndFaq() {
 }
 
 function Footer() {
-  return <footer className="bg-[#19382f] px-5 pb-8 pt-16 text-[#f6f1e5] lg:px-10"><div className="mx-auto max-w-[1320px]"><div className="grid gap-12 border-b border-[#f6f1e5]/15 pb-14 lg:grid-cols-[1.3fr_.7fr_.7fr]"><div><Logo invert /><p className="mt-8 max-w-[280px] text-sm leading-6 text-[#f6f1e5]/55">Property, with perspective.<br />Bangalore and beyond.</p></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">EXPLORE</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><Link href="/" data-testid="link-footer-home">Home</Link><a href="#services" data-testid="link-footer-services">Services</a><Link href="/properties" data-testid="link-footer-properties">Properties</Link><Link href="/careers" data-testid="link-footer-careers">Careers</Link></div></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">FIND US</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="mailto:hello@igreyholdings.com" data-testid="link-footer-email">hello@igreyholdings.com</a><span>Indiranagar, Bangalore</span><div className="flex items-center gap-4 pt-2"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" data-testid="link-footer-linkedin"><Linkedin className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" data-testid="link-footer-instagram"><Instagram className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" data-testid="link-footer-facebook"><Facebook className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a></div></div></div></div><div className="flex flex-wrap items-center justify-between gap-4 pt-7 font-mono-label text-[9px] text-[#f6f1e5]/35"><span>© 2025</span><div className="flex flex-wrap gap-x-6 gap-y-2"><a href="#terms-and-conditions" data-testid="link-footer-terms">Terms &amp; Conditions</a><a href="#privacy-policy" data-testid="link-footer-privacy">Privacy Policy</a><a href="#refund-replacement" data-testid="link-footer-refund">Refund &amp; Replacement</a></div><span>A BETTER PERSPECTIVE</span></div></div></footer>;
+  return <footer className="bg-[#19382f] px-5 pb-8 pt-16 text-[#f6f1e5] lg:px-10"><div className="mx-auto max-w-[1320px]"><div className="grid gap-12 border-b border-[#f6f1e5]/15 pb-14 lg:grid-cols-[1.3fr_.7fr_.7fr]"><div><Logo invert /><p className="mt-8 max-w-[280px] text-sm leading-6 text-[#f6f1e5]/55">Property, with perspective.<br />Bangalore and beyond.</p></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">EXPLORE</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><Link href="/" data-testid="link-footer-home">Home</Link><a href="#services" data-testid="link-footer-services">Services</a><Link href="/properties" data-testid="link-footer-properties">Properties</Link><Link href="/careers" data-testid="link-footer-careers">Careers</Link></div></div><div><p className="font-mono-label text-[9px] text-[#e8c979]">FIND US</p><div className="mt-5 flex flex-col gap-3 text-sm text-[#f6f1e5]/70"><a href="mailto:hello@igreyholdings.com" data-testid="link-footer-email">hello@igreyholdings.com</a><a href="tel:+919876543210" data-testid="link-footer-phone">+91 98765 43210</a><span>Indiranagar, Bangalore</span><div className="flex items-center gap-4 pt-2"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" data-testid="link-footer-linkedin"><Linkedin className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" data-testid="link-footer-instagram"><Instagram className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a><a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" data-testid="link-footer-facebook"><Facebook className="h-4 w-4 transition-colors hover:text-[#e8c979]" /></a></div></div></div></div><div className="flex flex-wrap items-center justify-between gap-4 pt-7 font-mono-label text-[9px] text-[#f6f1e5]/35"><span>© 2026</span><div className="flex flex-wrap gap-x-6 gap-y-2"><Link href="/terms-and-conditions" data-testid="link-footer-terms">Terms &amp; Conditions</Link><Link href="/privacy-policy" data-testid="link-footer-privacy">Privacy Policy</Link><Link href="/refund-replacement" data-testid="link-footer-refund">Refund &amp; Replacement</Link></div><span>A BETTER PERSPECTIVE</span></div></div></footer>;
+}
+
+type LegalSection = { heading: string; body: string };
+
+function LegalPage({ title, intro, sections }: { title: string; intro: string; sections: LegalSection[] }) {
+  return <div className="min-h-[100dvh] bg-[#f6f1e5] text-[#19382f]">
+    <div className="bg-[#19382f] text-[#f6f1e5]"><Header /><div className="mx-auto max-w-[1320px] px-5 pb-24 pt-44 lg:px-10 lg:pb-32"><Eyebrow light>IGREY HOLDINGS</Eyebrow><h1 className="mt-8 max-w-[900px] font-display text-6xl leading-[.88] lg:text-8xl">{title}</h1><p className="mt-9 max-w-[620px] text-lg leading-8 text-[#f6f1e5]/70">{intro}</p></div></div>
+    <main className="mx-auto max-w-[900px] px-5 py-20 lg:px-10 lg:py-28"><p className="font-mono-label text-[10px] tracking-[.16em] text-[#bd674e]">LAST UPDATED / 2026</p><div className="mt-12 grid gap-12">{sections.map(({ heading, body }) => <section key={heading} className="border-t border-[#d9d1c0] pt-6"><h2 className="font-display text-3xl text-[#19382f] lg:text-4xl">{heading}</h2><p className="mt-4 max-w-[720px] text-base leading-8 text-[#19382f]/65">{body}</p></section>)}</div></main>
+    <Footer />
+  </div>;
+}
+
+function TermsPage() {
+  return <LegalPage title="Terms & Conditions" intro="A clear outline of how conversations, property information and services work when you use iGrey." sections={[
+    { heading: 'Using this website', body: 'This website is provided to help you understand iGrey Holdings and the property services we offer. Please use the information responsibly and do not reproduce, modify or misuse the content without permission.' },
+    { heading: 'Property information', body: 'Listing details, availability, pricing and imagery are shared for guidance and may change. A property is only confirmed when the relevant parties have agreed the terms and completed the required documentation.' },
+    { heading: 'Our conversations', body: 'When you send an enquiry, you agree that our team may contact you about your request. We aim to keep every response clear and timely, but an enquiry does not create a service agreement or guarantee a property outcome.' },
+    { heading: 'Questions', body: 'If you have a question about these terms, please contact hello@igreyholdings.com and our team will help clarify the next step.' },
+  ]} />;
+}
+
+function PrivacyPage() {
+  return <LegalPage title="Privacy Policy" intro="We keep the information you share focused on the conversation you came to have." sections={[
+    { heading: 'What we receive', body: 'When you contact iGrey, we may receive your name, mobile number, email address, property preferences and the details you choose to include in your message.' },
+    { heading: 'How we use it', body: 'We use this information to respond to enquiries, arrange viewings, explain services and improve the way we support owners, buyers and tenants. We do not sell your personal information.' },
+    { heading: 'Keeping information safe', body: 'We take reasonable steps to protect the information shared with us and retain it only for as long as it is useful for the relationship or required by law.' },
+    { heading: 'Your choices', body: 'You can ask us to update or remove your contact information, or to stop hearing from us, by emailing hello@igreyholdings.com.' },
+  ]} />;
+}
+
+function RefundPage() {
+  return <LegalPage title="Refund & Replacement" intro="A straightforward guide to how we handle payments, changes and service concerns." sections={[
+    { heading: 'Service discussions', body: 'Any fees, deposits or service terms are discussed and confirmed before a service begins. The applicable agreement and written confirmation will explain what is included.' },
+    { heading: 'Requests and cancellations', body: 'If your plans change, contact us as soon as possible. We will review the request against the agreed terms, the stage of the service and any costs already incurred.' },
+    { heading: 'Property replacements', body: 'Where a property opportunity changes or becomes unavailable, our team will work with you to identify the next suitable option. A replacement is subject to availability and the terms agreed for the new property.' },
+    { heading: 'Need help?', body: 'For a payment or service question, write to hello@igreyholdings.com with your name and the relevant property or conversation details.' },
+  ]} />;
 }
 
 function LegacyCareersPage() {
@@ -453,7 +490,7 @@ function WhatsAppButton() {
 }
 
 function Router() {
-  return <ErrorBoundary><Switch><Route path="/" component={HomePage} /><Route path="/properties" component={PropertiesPage} /><Route path="/careers" component={CareersPage} /><Route component={NotFound} /></Switch></ErrorBoundary>;
+  return <ErrorBoundary><Switch><Route path="/" component={HomePage} /><Route path="/properties" component={PropertiesPage} /><Route path="/careers" component={CareersPage} /><Route path="/terms-and-conditions" component={TermsPage} /><Route path="/privacy-policy" component={PrivacyPage} /><Route path="/refund-replacement" component={RefundPage} /><Route component={NotFound} /></Switch></ErrorBoundary>;
 }
 
 function App() {
